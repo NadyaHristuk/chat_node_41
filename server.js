@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const express = require('express');
 const app = express();
 require('dotenv').config();
+const path = require('path');
 const server = require('http').Server(app);
 const io = require("socket.io")(server, {
     path: '/chat/',
@@ -17,8 +18,9 @@ mongoose.set('useCreateIndex', true);
 mongoose.set('useUnifiedTopology', true);
 mongoose.connect(process.env.DB);
 const Message = require('./Schema');
+app.use(express.static('./build'));
 app.get('/', (req, res) => {
-    res.sendFile('./build/index.html');
+    res.sendFile(path.join(__dirname,'./build/index.html'));
   })
 app.get('/db', (req, res) => {
     Message.find({}, (err,message) => {
@@ -49,5 +51,5 @@ io.on('connect', (client) => {
         client.broadcast.emit("change-online", online);
         });
 });
-app.use(express.static('./build/index.html'));
+
 server.listen(PORT, () => (console.log(`server is running on ${PORT}`)));
