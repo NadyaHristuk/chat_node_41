@@ -17,6 +17,9 @@ mongoose.set('useUnifiedTopology', true);
 mongoose.connect('mongodb+srv://dbUser:123@cluster0-rudtc.mongodb.net/test?authSource=admin&replicaSet=Cluster0-shard-0&w=majority&readPreference=primary&appname=MongoDB%20Compass&retryWrites=true&ssl=true');
 const Message = require('./Schema');
 app.get('/', (req, res) => {
+    res.sendFile('./build/index.html');
+  })
+app.get('/db', (req, res) => {
     Message.find({}, (err,message) => {
         if (err) throw err;
         res.json(message)        
@@ -45,5 +48,5 @@ io.on('connect', (client) => {
         client.broadcast.emit("change-online", online);
         });
 });
-app.use(express.static('./client/build'));
+app.use(express.static('./build/index.html'));
 server.listen(PORT, () => (console.log(`server is running on ${PORT}`)));
