@@ -2,6 +2,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const express = require('express');
 const app = express();
+require('dotenv').config();
 const server = require('http').Server(app);
 const io = require("socket.io")(server, {
     path: '/chat/',
@@ -14,7 +15,7 @@ mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 mongoose.set('useUnifiedTopology', true);
-mongoose.connect('mongodb+srv://dbUser:123@cluster0-rudtc.mongodb.net/test?authSource=admin&replicaSet=Cluster0-shard-0&w=majority&readPreference=primary&appname=MongoDB%20Compass&retryWrites=true&ssl=true');
+mongoose.connect(process.env.DB);
 const Message = require('./Schema');
 app.get('/', (req, res) => {
     res.sendFile('./build/index.html');
